@@ -1,5 +1,5 @@
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 __author__ = 'Juan Batiz-Benet'
 __email__ = 'juan@benet.ai'
 __doc__ = '''
@@ -16,7 +16,7 @@ Tested with:
 #TODO: Implements queries using a key index.
 #TODO: Implement TTL (and key configurations)
 
-import datastore
+import datastore.core
 
 
 class MemcachedDatastore(datastore.InterfaceMappingDatastore):
@@ -28,6 +28,26 @@ class MemcachedDatastore(datastore.InterfaceMappingDatastore):
   The only differences (which InterfaceMappingDatastore takes care of) are:
   - keys should be converted into strings
   - `put` calls should be mapped to `set`
+
+
+  Hello World:
+
+      >>> import pylibmc
+      >>> import datastore.memcached
+      >>>
+      >>> mc = pylibmc.Client(['127.0.0.1'])
+      >>> ds = datastore.memcached.MemcachedDatastore(mc)
+      >>>
+      >>> hello = datastore.Key('hello')
+      >>> ds.put(hello, 'world')
+      >>> ds.contains(hello)
+      True
+      >>> ds.get(hello)
+      'world'
+      >>> ds.delete(hello)
+      >>> ds.get(hello)
+      None
+
   '''
 
   def __init__(self, memcached):
@@ -51,24 +71,3 @@ class MemcachedDatastore(datastore.InterfaceMappingDatastore):
     '''
     #TODO
     raise NotImplementedError
-
-'''
-Hello World:
-
-    >>> import pylibmc
-    >>> import datastore.memcached
-    >>>
-    >>> mc = pylibmc.Client(['127.0.0.1'])
-    >>> ds = datastore.memcached.MemcachedDatastore(mc)
-    >>>
-    >>> hello = datastore.Key('hello')
-    >>> ds.put(hello, 'world')
-    >>> ds.contains(hello)
-    True
-    >>> ds.get(hello)
-    'world'
-    >>> ds.delete(hello)
-    >>> ds.get(hello)
-    None
-
-'''
